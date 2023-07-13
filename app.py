@@ -2,64 +2,105 @@ from dash import Dash, dcc, html, Output, Input
 import pandas as pd
 import plotly.graph_objects as go
 
-df = pd.read_csv('earthquakes.csv')
+df = pd.read_csv('usgs-dataset.csv')
 
 app = Dash(__name__)
 
-app.layout = html.Div([
-    dcc.RangeSlider(
-        id='mag-RangeSlider',
-        min=df['mag'].min(),
-        max=df['mag'].max(),
-        marks={},
-        value=[df['mag'].min(), df['mag'].max()],
-        tooltip={"placement": "bottom", "always_visible": True}
+app.layout = html.Div(id='main', children=[
+    html.Link(
+        rel='stylesheet',
+        href='/assets/styles.css'
     ),
-
-    dcc.RangeSlider(
-        id='year-RangeSlider',
-        min=df['year'].min(),
-        max=df['year'].max(),
-        step=1,
-        marks={},
-        value=[df['year'].min(), df['year'].max()],
-        tooltip={"placement": "bottom", "always_visible": True}
-    ),
-
-    html.Div(id='filtered-data-info'),
-
-    dcc.Graph(
-        id='graph',
-        config={'displayModeBar': False, 'scrollZoom': True},
-        style={'background': '#00FC87', 'padding-bottom': '2px', 'padding-left': '2px', 'height': '50vh'}
-    ),
-    
-    dcc.Graph(
-        id='histogram-1',
-        config={'displayModeBar': False, 'scrollZoom': True},
-        style={'background': '#00FC87', 'padding-bottom': '2px', 'padding-left': '2px', 'height': '25vh'}
-    ),
-
-    dcc.Graph(
-        id='histogram-2',
-        config={'displayModeBar': False, 'scrollZoom': True},
-        style={'background': '#00FC87', 'padding-bottom': '2px', 'padding-left': '2px', 'height': '25vh'}
-    )
+    html.Div(id='top-container', children=[
+        html.Div(id='upper-left-container', children=[
+            html.Div(id='RangeSlider-shares-container', children=[
+                html.Div(id='RangeSlider-container', children=[
+                    html.Div(id='mag-RangeSlider-container', className='container', children=[
+                        dcc.RangeSlider(
+                            id='mag-RangeSlider',
+                            min=df['mag'].min(),
+                            max=df['mag'].max(),
+                            marks={},
+                            value=[df['mag'].min(), df['mag'].max()],
+                            tooltip={"placement": "bottom", "always_visible": True}
+                        )
+                    ]),
+                    html.Div(id='year-RangeSlider-container', className='container', children=[
+                        dcc.RangeSlider(
+                            id='year-RangeSlider',
+                            min=df['year'].min(),
+                            max=df['year'].max(),
+                            step=1,
+                            marks={},
+                            value=[df['year'].min(), df['year'].max()],
+                            tooltip={"placement": "bottom", "always_visible": True}
+                        )
+                    ])
+                ]),
+                html.Div(id='shares-container', className='container', children=[
+                    html.H5(id='shares-text', children=['shares of all earthquakes']),
+                    html.H1(id='percentage', children=[]) #fix to make it show the actual percentage
+                ])
+            ]),
+            html.Div(id='histogram-container', children=[
+                html.Div(id='magType-container', className='container', children=[
+                    dcc.Graph(
+                        id='magType-histogram',
+                        config={'displayModeBar': False, 'scrollZoom': True},
+                        style={
+                            'background': '#00FC87', #remove the whole styling to the css file
+                            'padding-bottom': '2px',
+                            'padding-left': '2px'}
+                    )
+                ]),
+                html.Div(id='magSource-container', className='container', children=[
+                    dcc.Graph(
+                        id='magSource-histogram',
+                        config={'displayModeBar': False, 'scrollZoom': True},
+                        style={
+                            'background': '#00FC87',
+                            'padding-bottom': '2px',
+                            'padding-left': '2px'}
+                    )
+                ])
+            ])
+        ]),
+        html.Div(id='upper-right-container', className='container', children=[
+            dcc.Graph(
+                id='map',
+                config={'displayModeBar': False, 'scrollZoom': True},
+                style={
+                    'background': '#00FC87',
+                    'padding-bottom': '2px',
+                    'padding-left': '2px'}
+            )
+        ])
+    ]),
+    html.Div(id='bottom-container', className='container', children=[
+        dcc.Graph(
+            id='mag-linechart',
+            config={'displayModeBar': False, 'scrollZoom': True},
+            style={'background': '#00FC87', 'padding-bottom': '2px', 'padding-left': '2px'}
+        )
+    ])
 ])
 
-@app.callback(Output('graph', 'figure'),
-              Output('histogram-1', 'figure'),
-              Output('histogram-2', 'figure'),
-              Output('filtered-data-info', 'children'),
-              Input('mag-RangeSlider', 'value'),
-              Input('year-RangeSlider', 'value'),
-              Input('graph', 'relayoutData'))
-def update_graph(mag_range, year_range, relayoutData):
+
+@app.callback(
+    Output('map', 'figure'),
+    Output('mag-linechart', 'figure'),
+    Output('magType-histogram', 'figure'),
+    Output('magSource-histogram', 'figure'),
+    Output('percentage', 'children'),  # Updated the id to match the HTML element
+    Input('mag-RangeSlider', 'value'),
+    Input('year-RangeSlider', 'value'),
+    Input('map', 'relayoutData')
+)
+def update_data(mag_range, year_range, relayoutData):
     filtered_df = df[(df['mag'] >= mag_range[0]) & (df['mag'] <= mag_range[1]) &
-                     (df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
-    
+                    (df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
+
     filtered_data_percentage = len(filtered_df) / len(df) * 100
-    filtered_data_info = f"Filtered Data: {len(filtered_df)} out of {len(df)} earthquakes ({filtered_data_percentage:.2f}%)"
 
     # Check if relayoutData exists and contains a selection shape
     if relayoutData and 'shapes' in relayoutData:
@@ -71,9 +112,9 @@ def update_graph(mag_range, year_range, relayoutData):
                 lat_min, lat_max = y0, y1
                 lon_min, lon_max = x0, x1
                 filtered_df = filtered_df[(filtered_df['latitude'] >= lat_min) & (filtered_df['latitude'] <= lat_max) &
-                                          (filtered_df['longitude'] >= lon_min) & (filtered_df['longitude'] <= lon_max)]
+                                        (filtered_df['longitude'] >= lon_min) & (filtered_df['longitude'] <= lon_max)]
 
-    figure = go.Figure(data=go.Scattermapbox(
+    map_figure = go.Figure(data=go.Scattermapbox(
         lat=filtered_df['latitude'],
         lon=filtered_df['longitude'],
         mode='markers',
@@ -82,31 +123,37 @@ def update_graph(mag_range, year_range, relayoutData):
         hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>'
     ))
 
-    figure.update_layout(
+    map_figure.update_layout(
         mapbox=dict(
             style='open-street-map',
             center=dict(lat=filtered_df['latitude'].mean(), lon=filtered_df['longitude'].mean()),
             zoom=2
         ),
-        margin=dict(l=0, r=0, t=0, b=0),
-        height=300,
-        width=500
+        margin=dict(l=0, r=0, t=0, b=0)
     )
 
-    histogram_1 = go.Figure(data=go.Histogram(
+    magType_histogram = go.Figure(data=go.Histogram(
         x=filtered_df['magType'],
         marker=dict(color='blue')
     ))
-    histogram_1.update_layout(title='Magnitude Type Distribution')
+    magType_histogram.update_layout(title='Magnitude Type Distribution')
 
-    histogram_2 = go.Figure(data=go.Histogram(
-        x=filtered_df['net'],
+    magSource_histogram = go.Figure(data=go.Histogram(
+        x=filtered_df['magSource'],
         marker=dict(color='blue')
     ))
-    histogram_2.update_layout(title='Net Distribution')
+    magSource_histogram.update_layout(title='Net Distribution')
 
-    return figure, histogram_1, histogram_2, filtered_data_info
+    mag_linechart = go.Figure(data=go.Histogram(
+        x=filtered_df['mag'],
+        nbinsx=30,
+        marker=dict(color='blue')
+    ))
+    mag_linechart.update_layout(title='Magnitude Distribution', xaxis_title='Magnitude', yaxis_title='Count')
+
+    return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
+
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
