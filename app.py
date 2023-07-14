@@ -36,22 +36,27 @@ app.layout = html.Div(id='main', children=[
                             id='mag-RangeSlider',
                             min=df['mag'].min(),
                             max=df['mag'].max(),
-                            marks={},
+                            marks=None,
                             value=[df['mag'].min(), df['mag'].max()],
                             tooltip={"placement": "bottom", "always_visible": True}
                         )
                     ]),
-                    html.Div(id='year-RangeSlider-container', className='container', children=[
-                        dcc.RangeSlider(
-                            id='year-RangeSlider',
-                            min=df['year'].min(),
-                            max=df['year'].max(),
-                            step=1,
-                            marks={},
-                            value=[df['year'].min(), df['year'].max()],
-                            tooltip={"placement": "bottom", "always_visible": True}
-                        )
-                    ])
+                    html.Div(
+                            id='year-RangeSlider-container',
+                            className='container',
+                            children=[
+                                dcc.RangeSlider(
+                                    id='year-RangeSlider',
+                                    min=df['year'].min(),
+                                    max=df['year'].max(),
+                                    step=1,
+                                    value=[df['year'].min(), df['year'].max()],
+                                    tooltip={"placement": "bottom", "always_visible": True},
+                                    marks=None
+                                )
+                            ]
+)
+
                 ]),
                 html.Div(id='shares-container', className='container', children=[
                     html.H5(id='shares-text', children=['shares of all earthquakes']),
@@ -62,20 +67,13 @@ app.layout = html.Div(id='main', children=[
                 html.Div(id='magType-container', className='container', children=[
                     dcc.Graph(
                         id='magType-histogram',
-                        config={'displayModeBar': False, 'scrollZoom': True},
-                        style={
-                            #remove the whole styling to the css file
-                            'padding-bottom': '2px',
-                            'padding-left': '2px'}
+                        config={'displayModeBar': False, 'scrollZoom': True}
                     )
                 ]),
                 html.Div(id='magSource-container', className='container', children=[
                     dcc.Graph(
                         id='magSource-histogram',
-                        config={'displayModeBar': False, 'scrollZoom': True},
-                        style={
-                            'padding-bottom': '2px',
-                            'padding-left': '2px'}
+                        config={'displayModeBar': False, 'scrollZoom': True}
                     )
                 ])
             ])
@@ -83,19 +81,16 @@ app.layout = html.Div(id='main', children=[
         html.Div(id='upper-right-container', className='container', children=[
             dcc.Graph(
                 id='map',
-                config={'displayModeBar': False, 'scrollZoom': True},
-                style={
-                    'padding-bottom': '2px',
-                    'padding-left': '2px'}
+                config={'displayModeBar': True, 'scrollZoom': True}
             )
-        ])
-    ]),
-    html.Div(id='bottom-container', className='container', children=[
-        dcc.Graph(
-            id='mag-linechart',
-            config={'displayModeBar': False, 'scrollZoom': True},
-            style={'padding-bottom': '2px', 'padding-left': '2px'}
+        ]),
+        html.Div(id='bottom-container', className='container', children=[
+            dcc.Graph(
+                id='mag-linechart',
+                config={'displayModeBar': False, 'scrollZoom': True},
+                style={'padding-bottom': '2px', 'padding-left': '2px'}
         )
+    ])
     ])
 ])
 
@@ -134,7 +129,8 @@ def update_data(mag_range, year_range, relayoutData):
         mode='markers',
         marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
         text=filtered_df['mag'],
-        hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>'
+        hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>',
+        
     ))
 
     map_figure.update_layout(
@@ -147,25 +143,35 @@ def update_data(mag_range, year_range, relayoutData):
         ),
         margin=dict(l=0, r=0, t=0, b=0)
     )
+    
+    magType_counts = filtered_df['magType'].value_counts()
+    top_magTypes = magType_counts.nlargest(3).index
+    filtered_df_top_magTypes = filtered_df[filtered_df['magType'].isin(top_magTypes)]
 
     magType_histogram = go.Figure(data=go.Histogram(
-        x=filtered_df['magType'],
+        x=filtered_df_top_magTypes['magType'],
         marker=dict(color='blue')
     ))
-    magType_histogram.update_layout(title='Magnitude Type Distribution')
+    magType_histogram.update_layout()
+    
+    magSource_counts = filtered_df['magSource'].value_counts()
+    top_magSources = magSource_counts.nlargest(3).index
+    filtered_df_top_magSources = filtered_df[filtered_df['magSource'].isin(top_magSources)]
 
     magSource_histogram = go.Figure(data=go.Histogram(
-        x=filtered_df['magSource'],
+        x=filtered_df_top_magSources['magSource'],
         marker=dict(color='blue')
     ))
-    magSource_histogram.update_layout(title='Net Distribution')
-
+    magSource_histogram.update_layout()
+    
     mag_linechart = go.Figure(data=go.Histogram(
         x=filtered_df['mag'],
         nbinsx=30,
         marker=dict(color='blue')
     ))
     mag_linechart.update_layout(title='Magnitude Distribution', xaxis_title='Magnitude', yaxis_title='Count')
+ 
+
 
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
 
