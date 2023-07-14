@@ -1,6 +1,10 @@
 from dash import Dash, dcc, html, Output, Input
 import pandas as pd
 import plotly.graph_objects as go
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 df = pd.read_csv('usgs-dataset.csv')
 
@@ -10,6 +14,18 @@ app.layout = html.Div(id='main', children=[
     html.Link(
         rel='stylesheet',
         href='/assets/styles.css'
+    ),
+    html.Link(
+        rel='preconnect',
+        href='https://fonts.googleapis.com'
+    ),
+    html.Link(
+        rel='preconnect',
+        href='https://fonts.gstatic.com'
+    ),
+    html.Link(
+        rel='stylesheet',
+        href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'
     ),
     html.Div(id='top-container', children=[
         html.Div(id='upper-left-container', children=[
@@ -123,7 +139,8 @@ def update_data(mag_range, year_range, relayoutData):
 
     map_figure.update_layout(
         mapbox=dict(
-            style='open-street-map',
+            #style=os.getenv('MAPBOX_STYLE'),
+            accesstoken=os.getenv('MAPBOX_TOKEN'),
             center=dict(lat=filtered_df['latitude'].mean(), lon=filtered_df['longitude'].mean()),
             zoom=2,
             uirevision=True
