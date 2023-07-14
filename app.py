@@ -39,7 +39,7 @@ app.layout = html.Div(id='main', children=[
                 ]),
                 html.Div(id='shares-container', className='container', children=[
                     html.H5(id='shares-text', children=['shares of all earthquakes']),
-                    html.H1(id='percentage', children=[]) #fix to make it show the actual percentage
+                    html.H1(id='percentage', children=[])
                 ])
             ]),
             html.Div(id='histogram-container', children=[
@@ -48,7 +48,7 @@ app.layout = html.Div(id='main', children=[
                         id='magType-histogram',
                         config={'displayModeBar': False, 'scrollZoom': True},
                         style={
-                            'background': '#00FC87', #remove the whole styling to the css file
+                            #remove the whole styling to the css file
                             'padding-bottom': '2px',
                             'padding-left': '2px'}
                     )
@@ -58,7 +58,6 @@ app.layout = html.Div(id='main', children=[
                         id='magSource-histogram',
                         config={'displayModeBar': False, 'scrollZoom': True},
                         style={
-                            'background': '#00FC87',
                             'padding-bottom': '2px',
                             'padding-left': '2px'}
                     )
@@ -70,7 +69,6 @@ app.layout = html.Div(id='main', children=[
                 id='map',
                 config={'displayModeBar': False, 'scrollZoom': True},
                 style={
-                    'background': '#00FC87',
                     'padding-bottom': '2px',
                     'padding-left': '2px'}
             )
@@ -80,7 +78,7 @@ app.layout = html.Div(id='main', children=[
         dcc.Graph(
             id='mag-linechart',
             config={'displayModeBar': False, 'scrollZoom': True},
-            style={'background': '#00FC87', 'padding-bottom': '2px', 'padding-left': '2px'}
+            style={'padding-bottom': '2px', 'padding-left': '2px'}
         )
     ])
 ])
@@ -118,7 +116,7 @@ def update_data(mag_range, year_range, relayoutData):
         lat=filtered_df['latitude'],
         lon=filtered_df['longitude'],
         mode='markers',
-        marker=dict(size=5, color=filtered_df['mag'], colorscale='Rainbow', showscale=True),
+        marker=dict(size=5, color=filtered_df['mag'], colorscale=['blue', 'red'], showscale=True),
         text=filtered_df['mag'],
         hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>'
     ))
