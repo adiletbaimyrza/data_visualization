@@ -116,7 +116,7 @@ def update_data(mag_range, year_range, relayoutData):
         lat=filtered_df['latitude'],
         lon=filtered_df['longitude'],
         mode='markers',
-        marker=dict(size=5, color=filtered_df['mag'], colorscale=['blue', 'red'], showscale=True),
+        marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
         text=filtered_df['mag'],
         hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>'
     ))
@@ -125,7 +125,8 @@ def update_data(mag_range, year_range, relayoutData):
         mapbox=dict(
             style='open-street-map',
             center=dict(lat=filtered_df['latitude'].mean(), lon=filtered_df['longitude'].mean()),
-            zoom=2
+            zoom=2,
+            uirevision=True
         ),
         margin=dict(l=0, r=0, t=0, b=0)
     )
