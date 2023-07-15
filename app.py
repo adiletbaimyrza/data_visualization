@@ -27,77 +27,74 @@ app.layout = html.Div(id='main', children=[
         rel='stylesheet',
         href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'
     ),
-    html.Div(id='top-container', children=[
-        html.Div(id='upper-left-container', children=[
-            html.Div(id='RangeSlider-shares-container', children=[
-                html.Div(id='RangeSlider-container', children=[
-                    html.Div(id='mag-RangeSlider-container', className='container', children=[
-                        dcc.RangeSlider(
-                            id='mag-RangeSlider',
-                            min=df['mag'].min(),
-                            max=df['mag'].max(),
-                            marks=None,
-                            value=[df['mag'].min(), df['mag'].max()],
-                            tooltip={"placement": "bottom", "always_visible": True}
-                        )
-                    ]),
-                    html.Div(
-                            id='year-RangeSlider-container',
-                            className='container',
-                            children=[
-                                dcc.RangeSlider(
-                                    id='year-RangeSlider',
-                                    min=df['year'].min(),
-                                    max=df['year'].max(),
-                                    step=1,
-                                    value=[df['year'].min(), df['year'].max()],
-                                    tooltip={"placement": "bottom", "always_visible": True},
-                                    marks=None
-                                )
-                            ]
-                    )           
-                ]),
-                html.Div(id='shares-container', className='container', children=[
+    html.Div(id='grid-container', children=[
+        html.Div(id='mag-RangeSlider-container', className='container', children=[
+            dcc.RangeSlider(
+                id='mag-RangeSlider',
+                className='display-item',
+                min=df['mag'].min(),
+                max=df['mag'].max(),
+                marks=None,
+                value=[df['mag'].min(), df['mag'].max()],
+                tooltip={"placement": "bottom", "always_visible": True}
+            )
+        ]),
+        html.Div(id='year-RangeSlider-container', className='container', children=[
+            dcc.RangeSlider(
+                id='year-RangeSlider',
+                className='display-item',
+                min=df['year'].min(),
+                max=df['year'].max(),
+                step=1,
+                value=[df['year'].min(), df['year'].max()],
+                tooltip={"placement": "bottom", "always_visible": True},
+                marks=None
+            )
+        ]),
+        html.Div(id='shares-container', className='container', children=[
                     html.H5(id='shares-text', children=['shares of all earthquakes']),
                     html.H1(id='percentage', children=[])
-                ])
-            ]),
-            html.Div(id='histogram-container', children=[
-                html.Div(id='magType-container', className='container', children=[
-                    dcc.Graph(
-                        id='magType-histogram',
-                        config={'displayModeBar': False, 'staticPlot': True},
-                    )
-                ]),
-                html.Div(id='magSource-container', className='container', children=[
-                    dcc.Graph(
-                        id='magSource-histogram',
-                        config={'displayModeBar': False,
-                                'scrollZoom': False,
-                                'editable': False,
-                                'showAxisDragHandles': False,
-                                'showAxisRangeEntryBoxes': False, 
-                                'showTips': True,
-                                'staticPlot': True}
-                    )
-                ])
-            ])
         ]),
-        html.Div(id='upper-right-container', className='container', children=[
+        html.Div(id='magType-container', className='container', children=[
+            dcc.Graph(
+                id='magType-histogram',
+                className='display-item',
+                config={'displayModeBar': False, 'staticPlot': True, 'responsive': True},
+                figure={'layout': {'autosize': True}},
+            )
+        ]),
+        html.Div(id='magSource-container', className='container', children=[
+            dcc.Graph(
+                id='magSource-histogram',
+                className='display-item',
+                config={'displayModeBar': False,
+                        'scrollZoom': False,
+                        'editable': False,
+                        'showAxisDragHandles': False,
+                        'showAxisRangeEntryBoxes': False, 
+                        'showTips': True,
+                        'staticPlot': True},
+                responsive=True
+            )
+        ]),
+        html.Div(id='mag-linechart-container', className='container', children=[
+            dcc.Graph(
+                id='mag-linechart',
+                className='display-item',
+                config={'displayModeBar': False, 'staticPlot': True},
+                responsive=True
+            )
+        ]),
+        html.Div(id='map-container', className='container', children=[
             dcc.Graph(
                 id='map',
+                className='display-item',
                 config={'displayModeBar': True,
                         'scrollZoom': True,
                         'displaylogo': False},
                 selectedData={}
             )
-        ]),
-    ]),
-    html.Div(id='bottom-container', className='container', children=[
-            dcc.Graph(
-                id='mag-linechart',
-                config={'displayModeBar': False, 'staticPlot': True}
-        )
+        ])
     ])
 ])
 
@@ -107,7 +104,7 @@ app.layout = html.Div(id='main', children=[
     Output('mag-linechart', 'figure'),
     Output('magType-histogram', 'figure'),
     Output('magSource-histogram', 'figure'),
-    Output('percentage', 'children'),  # Updated the id to match the HTML element
+    Output('percentage', 'children'),
     Input('mag-RangeSlider', 'value'),
     Input('year-RangeSlider', 'value'),
     Input('map', 'selectedData')
@@ -115,9 +112,15 @@ app.layout = html.Div(id='main', children=[
 def update_data(mag_range, year_range, selectedData):
     filtered_df = df[(df['mag'] >= mag_range[0]) & (df['mag'] <= mag_range[1]) &
                     (df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
-
+    
+    if selectedData:
+        selected_points = selectedData.get('points', [])
+        if selected_points:
+            selected_indices = [point.get('pointIndex') for point in selected_points]
+            filtered_df = filtered_df.iloc[selected_indices]
+            
     filtered_data_percentage = len(filtered_df) / len(df) * 100
-
+    
     map_figure = go.Figure(data=go.Scattermapbox(
         lat=filtered_df['latitude'],
         lon=filtered_df['longitude'],
@@ -127,7 +130,7 @@ def update_data(mag_range, year_range, selectedData):
         hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>',
         
     ))
-
+    
     map_figure.update_layout(
         mapbox=dict(
             #style=os.getenv('MAPBOX_STYLE'),
@@ -142,33 +145,31 @@ def update_data(mag_range, year_range, selectedData):
     magType_counts = filtered_df['magType'].value_counts()
     top_magTypes = magType_counts.nlargest(3).index
     filtered_df_top_magTypes = filtered_df[filtered_df['magType'].isin(top_magTypes)]
-
+    
     magType_histogram = go.Figure(data=go.Histogram(
         x=filtered_df_top_magTypes['magType'],
         marker=dict(color='blue')
     ))
-    magType_histogram.update_layout()
+    magType_histogram.update_layout(margin=dict(l=0, r=0, t=0, b=0))
     
     magSource_counts = filtered_df['magSource'].value_counts()
     top_magSources = magSource_counts.nlargest(3).index
     filtered_df_top_magSources = filtered_df[filtered_df['magSource'].isin(top_magSources)]
-
+    
     magSource_histogram = go.Figure(data=go.Histogram(
         x=filtered_df_top_magSources['magSource'],
         marker=dict(color='blue')
     ))
-    magSource_histogram.update_layout()
+    magSource_histogram.update_layout(margin=dict(l=0, r=0, t=0, b=0))
     
     mag_linechart = go.Figure(data=go.Histogram(
         x=filtered_df['mag'],
         nbinsx=30,
         marker=dict(color='blue')
     ))
-    mag_linechart.update_layout()
-
-
+    mag_linechart.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+    
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
-
 
 
 if __name__ == '__main__':

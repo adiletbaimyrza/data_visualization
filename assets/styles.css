@@ -7,15 +7,14 @@
 }
 
 html, body {
-    background-color: rgb(6, 6, 34);
     height: 100%;
     font-family: 'Roboto', sans-serif;
+    background: #e9c7c7;
 }
 
 #react-entry-point {
     height: 100%;
 }
-
 
 * {
     margin: 0;
@@ -29,100 +28,77 @@ h1, h5 {
 
 #main {
     height: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
-#top-container {
-    display: flex;
-    flex-direction: row;
-}
+#grid-container {
+    height: 100%;
 
-#upper-left-container {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 50%;
-}
-
-#upper-right-container {
-    flex-basis: 50%;
-}
-
-#RangeSlider-shares-container {
-    display: flex;
-    flex-direction: row;
-    flex-basis: 50%;
-}
-
-#histogram-container {
-    display: flex;
-    flex-direction: row;
-    flex-basis: 50%;
+    display: grid;
+    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(8, 1fr);
 }
 
 #magType-container {
-    flex-basis: 50%;
+    grid-row-start: 5;
+    grid-row-end: 9;
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 #magSource-container {
-    flex-basis: 50%;
+    grid-row-start: 5;
+    grid-row-end: 9;
+    grid-column-start: 3;
+    grid-column-end: 5;
 }
 
 #shares-container {
-    color: white;
-    flex-basis: 50%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin: auto;
-}
+    background-color: white;
 
-#RangeSlider-container {
-    flex-basis: 50%;
-}
-
-#RangeSlider-container {
-    display: flex;
-    flex-direction: column;
+    grid-row-start: 1;
+    grid-row-end: 5;
+    grid-column-start: 3;
+    grid-column-end: 5;
 }
 
 #mag-RangeSlider-container {
-    flex-basis: 50%;
+    background-color: white;
+
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 #year-RangeSlider-container {
-    flex-basis: 50%;
+    background-color: white;
+    
+    grid-row-start: 3;
+    grid-row-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
-#mag-RangeSlider {
-    width: 100%;
-    height: 100%;
-    flex-basis: 50%;
+#map-container {
+    grid-row-start: 1;
+    grid-row-end: 6;
+    grid-column-start: 5;
+    grid-column-end: 9;
 }
 
-#year-RangeSlider {
-    width: 100%;
-    height: 100%;
-    flex-basis: 50%;
-}
-
-#magType-histogram {
-    width: 100%;
-    height: 100%;
-}
-
-#magSource-histogram {
+.display-item {
     width: 100%;
     height: 100%;
 }
 
-#map {
-    width: 100%;
-    height: 100%;
-}
-
-#mag-linechart {
-    width: 100%;
-    height: 100%;
+#mag-linechart-container {
+    grid-row-start: 6;
+    grid-row-end: 9;
+    grid-column-start: 5;
+    grid-column-end: 9;
 }
 
