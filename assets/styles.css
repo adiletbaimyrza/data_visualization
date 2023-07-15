@@ -8,8 +8,11 @@
 
 html, body {
     height: 100%;
+    color: white;
     font-family: 'Roboto', sans-serif;
-    background: #e9c7c7;
+    font-size: 16px;
+    font-weight: 300;
+    background: rgb(23, 27, 38);
 }
 
 #react-entry-point {
@@ -36,22 +39,48 @@ h1, h5 {
 
     display: grid;
     gap: 5px;
-    grid-template-rows: repeat(10, 1fr);
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(42, 1fr);
+    grid-template-columns: repeat(20, 1fr);
+}
+
+.container {
+    background: rgb(37, 44, 61);
+}
+
+/*rgb(46, 116, 173)*/
+
+p {
+    border-bottom: solid rgb(23, 27, 38) 1px;
+    padding: 5px 0 0 5px;
+}
+
+#shares-text {
+    font-weight: 300;
+}
+
+#percentage {
+    font-size: 40px;
+    font-weight: 400;
 }
 
 #magType-container {
-    grid-row-start: 5;
-    grid-row-end: 8;
+    display: flex;
+    flex-direction: column;
+
+    grid-row-start: 15;
+    grid-row-end: 29;
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 5;
 }
 
 #magSource-container {
-    grid-row-start: 5;
-    grid-row-end: 8;
-    grid-column-start: 3;
-    grid-column-end: 5;
+    display: flex;
+    flex-direction: column;
+
+    grid-row-start: 15;
+    grid-row-end: 29;
+    grid-column-start: 5;
+    grid-column-end: 9;
 }
 
 #shares-container {
@@ -59,37 +88,47 @@ h1, h5 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    padding: 3px;
 
     grid-row-start: 1;
-    grid-row-end: 5;
-    grid-column-start: 3;
-    grid-column-end: 5;
+    grid-row-end: 15;
+    grid-column-start: 6;
+    grid-column-end: 9;
 }
 
 #mag-RangeSlider-container {
-    background-color: white;
+    padding: 3px;
 
     grid-row-start: 1;
-    grid-row-end: 3;
+    grid-row-end: 8;
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 6;
+}
+
+#mag-RangeSlider {
+    display: flex;
+    align-items: center;
 }
 
 #year-RangeSlider-container {
-    background-color: white;
+    padding: 3px;
     
-    grid-row-start: 3;
-    grid-row-end: 5;
+    grid-row-start: 8;
+    grid-row-end: 15;
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 6;
+}
+
+#year-RangeSlider {
+    display: flex;
+    align-items: center;
 }
 
 #map-container {
     grid-row-start: 1;
-    grid-row-end: 11;
-    grid-column-start: 5;
-    grid-column-end: 11;
+    grid-row-end: 43;
+    grid-column-start: 9;
+    grid-column-end: 21;
 }
 
 .display-item {
@@ -98,9 +137,12 @@ h1, h5 {
 }
 
 #mag-linechart-container {
-    grid-row-start: 8;
-    grid-row-end: 11;
+    display: flex;
+    flex-direction: column;
+
+    grid-row-start: 29;
+    grid-row-end: 43;
     grid-column-start: 1;
-    grid-column-end: 5;
+    grid-column-end: 9;
 }
 
