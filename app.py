@@ -29,6 +29,7 @@ app.layout = html.Div(id='main', children=[
     ),
     html.Div(id='grid-container', children=[
         html.Div(id='mag-RangeSlider-container', className='container', children=[
+            html.P('Magnitude'),
             dcc.RangeSlider(
                 id='mag-RangeSlider',
                 className='display-item',
@@ -40,6 +41,7 @@ app.layout = html.Div(id='main', children=[
             )
         ]),
         html.Div(id='year-RangeSlider-container', className='container', children=[
+            html.P('Year'),
             dcc.RangeSlider(
                 id='year-RangeSlider',
                 className='display-item',
@@ -52,10 +54,11 @@ app.layout = html.Div(id='main', children=[
             )
         ]),
         html.Div(id='shares-container', className='container', children=[
-                    html.H5(id='shares-text', children=['shares of all earthquakes']),
+                    html.H5(id='shares-text', children=['Share of all earthquakes']),
                     html.H1(id='percentage', children=[])
         ]),
         html.Div(id='magType-container', className='container', children=[
+            html.P('Top magnitude types'),
             dcc.Graph(
                 id='magType-histogram',
                 className='display-item',
@@ -64,20 +67,18 @@ app.layout = html.Div(id='main', children=[
             )
         ]),
         html.Div(id='magSource-container', className='container', children=[
+            html.P('Top contributors'),
             dcc.Graph(
                 id='magSource-histogram',
                 className='display-item',
                 config={'displayModeBar': False,
                         'scrollZoom': False,
-                        'editable': False,
-                        'showAxisDragHandles': False,
-                        'showAxisRangeEntryBoxes': False, 
-                        'showTips': True,
                         'staticPlot': True},
                 responsive=True
             )
         ]),
         html.Div(id='mag-linechart-container', className='container', children=[
+            html.P('Earthquakes distribution by magnitude'),
             dcc.Graph(
                 id='mag-linechart',
                 className='display-item',
@@ -128,7 +129,6 @@ def update_data(mag_range, year_range, selectedData):
         marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
         text=filtered_df['mag'],
         hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>',
-        
     ))
     
     map_figure.update_layout(
@@ -139,8 +139,7 @@ def update_data(mag_range, year_range, selectedData):
             zoom=2,
             uirevision=True
         ),
-        margin=dict(l=0, r=0, t=0, b=0)
-    )
+        margin=dict(l=3, r=3, t=3, b=3))
     
     magType_counts = filtered_df['magType'].value_counts()
     top_magTypes = magType_counts.nlargest(3).index
@@ -148,9 +147,13 @@ def update_data(mag_range, year_range, selectedData):
     
     magType_histogram = go.Figure(data=go.Histogram(
         x=filtered_df_top_magTypes['magType'],
-        marker=dict(color='blue')
+        marker=dict(color='rgb(46, 116, 173)'),
+        
     ))
-    magType_histogram.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+    magType_histogram.update_layout(margin=dict(l=3, r=3, t=3, b=3),
+                                    plot_bgcolor='rgb(37, 44, 61)',
+                                    paper_bgcolor='rgb(37, 44, 61)',
+                                    font_color='white')
     
     magSource_counts = filtered_df['magSource'].value_counts()
     top_magSources = magSource_counts.nlargest(3).index
@@ -158,16 +161,22 @@ def update_data(mag_range, year_range, selectedData):
     
     magSource_histogram = go.Figure(data=go.Histogram(
         x=filtered_df_top_magSources['magSource'],
-        marker=dict(color='blue')
+        marker=dict(color='rgb(46, 116, 173)')
     ))
-    magSource_histogram.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+    magSource_histogram.update_layout(margin=dict(l=3, r=3, t=3, b=3),
+                                    plot_bgcolor='rgb(37, 44, 61)',
+                                    paper_bgcolor='rgb(37, 44, 61)',
+                                    font_color='white')
     
     mag_linechart = go.Figure(data=go.Histogram(
         x=filtered_df['mag'],
         nbinsx=30,
-        marker=dict(color='blue')
+        marker=dict(color='rgb(46, 116, 173)')
     ))
-    mag_linechart.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+    mag_linechart.update_layout(margin=dict(l=3, r=3, t=3, b=3),
+                                plot_bgcolor='rgb(37, 44, 61)',
+                                paper_bgcolor='rgb(37, 44, 61)',
+                                font_color='white')
     
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
 
