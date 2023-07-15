@@ -55,8 +55,7 @@ app.layout = html.Div(id='main', children=[
                                     marks=None
                                 )
                             ]
-)
-
+                    )           
                 ]),
                 html.Div(id='shares-container', className='container', children=[
                     html.H5(id='shares-text', children=['shares of all earthquakes']),
@@ -67,13 +66,19 @@ app.layout = html.Div(id='main', children=[
                 html.Div(id='magType-container', className='container', children=[
                     dcc.Graph(
                         id='magType-histogram',
-                        config={'displayModeBar': False, 'scrollZoom': True}
+                        config={'displayModeBar': False, 'staticPlot': True},
                     )
                 ]),
                 html.Div(id='magSource-container', className='container', children=[
                     dcc.Graph(
                         id='magSource-histogram',
-                        config={'displayModeBar': False, 'scrollZoom': True}
+                        config={'displayModeBar': False,
+                                'scrollZoom': False,
+                                'editable': False,
+                                'showAxisDragHandles': False,
+                                'showAxisRangeEntryBoxes': False, 
+                                'showTips': True,
+                                'staticPlot': True}
                     )
                 ])
             ])
@@ -81,16 +86,18 @@ app.layout = html.Div(id='main', children=[
         html.Div(id='upper-right-container', className='container', children=[
             dcc.Graph(
                 id='map',
-                config={'displayModeBar': True, 'scrollZoom': True}
+                config={'displayModeBar': True,
+                        'scrollZoom': True,
+                        'displaylogo': False},
+                selectedData={}
             )
         ]),
-        html.Div(id='bottom-container', className='container', children=[
+    ]),
+    html.Div(id='bottom-container', className='container', children=[
             dcc.Graph(
                 id='mag-linechart',
-                config={'displayModeBar': False, 'scrollZoom': True},
-                style={'padding-bottom': '2px', 'padding-left': '2px'}
+                config={'displayModeBar': False, 'staticPlot': True}
         )
-    ])
     ])
 ])
 
@@ -103,25 +110,13 @@ app.layout = html.Div(id='main', children=[
     Output('percentage', 'children'),  # Updated the id to match the HTML element
     Input('mag-RangeSlider', 'value'),
     Input('year-RangeSlider', 'value'),
-    Input('map', 'relayoutData')
+    Input('map', 'selectedData')
 )
-def update_data(mag_range, year_range, relayoutData):
+def update_data(mag_range, year_range, selectedData):
     filtered_df = df[(df['mag'] >= mag_range[0]) & (df['mag'] <= mag_range[1]) &
                     (df['year'] >= year_range[0]) & (df['year'] <= year_range[1])]
 
     filtered_data_percentage = len(filtered_df) / len(df) * 100
-
-    # Check if relayoutData exists and contains a selection shape
-    if relayoutData and 'shapes' in relayoutData:
-        shapes = relayoutData['shapes']
-        if shapes:
-            shape = shapes[0]  # Assuming only one shape is selected
-            if shape['type'] == 'rect':
-                x0, y0, x1, y1 = shape['x0'], shape['y0'], shape['x1'], shape['y1']
-                lat_min, lat_max = y0, y1
-                lon_min, lon_max = x0, x1
-                filtered_df = filtered_df[(filtered_df['latitude'] >= lat_min) & (filtered_df['latitude'] <= lat_max) &
-                                        (filtered_df['longitude'] >= lon_min) & (filtered_df['longitude'] <= lon_max)]
 
     map_figure = go.Figure(data=go.Scattermapbox(
         lat=filtered_df['latitude'],
@@ -169,8 +164,7 @@ def update_data(mag_range, year_range, relayoutData):
         nbinsx=30,
         marker=dict(color='blue')
     ))
-    mag_linechart.update_layout(title='Magnitude Distribution', xaxis_title='Magnitude', yaxis_title='Count')
- 
+    mag_linechart.update_layout()
 
 
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
