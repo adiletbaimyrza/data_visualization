@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import os
 from dotenv import load_dotenv
 
+
 external_stylesheets = [{
     'href': '/assets/sliders.css',
     'rel': 'stylesheet'
@@ -14,18 +15,14 @@ PAPER_BGCOLOR='#373432'
 FONT_COLOR='white'
 MARKER_COLOR='#00c9ac'
 
-load_dotenv()
-
 df = pd.read_csv('usgs-dataset.csv')
+
+load_dotenv()
 
 app = Dash(__name__,
             external_stylesheets=external_stylesheets,
-            meta_tags=[
-                {
-                    "name": "viewport",
-                    "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no",
-                }
-            ])
+            meta_tags=[{"name": "viewport",
+                        "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}])
 
 app.layout = html.Div(id='main', children=[
     html.Link(
@@ -79,8 +76,9 @@ app.layout = html.Div(id='main', children=[
             dcc.Graph(
                 id='magType-histogram',
                 className='display-item',
-                config={'displayModeBar': False, 'staticPlot': True, 'responsive': True},
-                figure={'layout': {'autosize': True}},
+                config={'displayModeBar': False,
+                        'staticPlot': True,
+                        'responsive': True}
             )
         ]),
         html.Div(id='magSource-container', className='container', children=[
@@ -89,9 +87,8 @@ app.layout = html.Div(id='main', children=[
                 id='magSource-histogram',
                 className='display-item',
                 config={'displayModeBar': False,
-                        'scrollZoom': False,
-                        'staticPlot': True},
-                responsive=True
+                        'staticPlot': True,
+                        'responsive': True}
             )
         ]),
         html.Div(id='mag-linechart-container', className='container', children=[
@@ -99,8 +96,9 @@ app.layout = html.Div(id='main', children=[
             dcc.Graph(
                 id='mag-linechart',
                 className='display-item',
-                config={'displayModeBar': False, 'staticPlot': True},
-                responsive=True
+                config={'displayModeBar': False,
+                        'staticPlot': True,
+                        'responsive': True}
             )
         ]),
         html.Div(id='map-container', className='container', children=[
@@ -136,18 +134,22 @@ def update_data(mag_range, year_range, selectedData):
         if selected_points:
             selected_indices = [point.get('pointIndex') for point in selected_points]
             filtered_df = filtered_df.iloc[selected_indices]
-            
+    
+    
     filtered_data_percentage = len(filtered_df) / len(df) * 100
     
-    map_figure = go.Figure(data=go.Scattermapbox(
-        lat=filtered_df['latitude'],
-        lon=filtered_df['longitude'],
-        mode='markers',
-        marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
-        text=filtered_df['mag'],
-        hovertemplate='Magnitude: %{text}<br>Latitude: %{lat}<br>Longitude: %{lon}<extra></extra>',
-    ))
     
+    map_figure = go.Figure(
+        data=go.Scattermapbox(
+            lat=filtered_df['latitude'],
+            lon=filtered_df['longitude'],
+            mode='markers',
+            marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
+            text=filtered_df['mag'],
+            customdata=filtered_df[['place', 'year', 'depth']],
+            hovertemplate='Magnitude: %{text}<br>Place: %{customdata[0]}<br>Year: %{customdata[1]}<br>Depth: %{customdata[2]}km<extra></extra>',
+        )
+    )
     map_figure.update_layout(
         mapbox=dict(
             accesstoken=os.getenv('MAPBOX_TOKEN'),
@@ -156,16 +158,20 @@ def update_data(mag_range, year_range, selectedData):
             uirevision=True,
             style='dark'
         ),
-        margin=dict(l=0, r=0, t=0, b=0))
+        margin=dict(l=0, r=0, t=0, b=0)
+    )
+    
     
     magType_counts = filtered_df['magType'].value_counts()
     top_magTypes = magType_counts.nlargest(3).index
     filtered_df_top_magTypes = filtered_df[filtered_df['magType'].isin(top_magTypes)]
     
-    magType_histogram = go.Figure(data=go.Histogram(
-        x=filtered_df_top_magTypes['magType'],
-        marker=dict(color=MARKER_COLOR)
-    ))
+    magType_histogram = go.Figure(
+        data=go.Histogram(
+            x=filtered_df_top_magTypes['magType'],
+            marker=dict(color=MARKER_COLOR)
+        )
+    )
     magType_histogram.update_layout(margin=dict(l=3, r=3, t=3, b=3),
                                     plot_bgcolor=PLOT_BGCOLOR,
                                     paper_bgcolor=PAPER_BGCOLOR,
@@ -173,14 +179,17 @@ def update_data(mag_range, year_range, selectedData):
                                     xaxis=dict(showgrid=False),
                                     yaxis=dict(showgrid=False))
     
+    
     magSource_counts = filtered_df['magSource'].value_counts()
     top_magSources = magSource_counts.nlargest(3).index
     filtered_df_top_magSources = filtered_df[filtered_df['magSource'].isin(top_magSources)]
     
-    magSource_histogram = go.Figure(data=go.Histogram(
-        x=filtered_df_top_magSources['magSource'],
-        marker=dict(color=MARKER_COLOR)
-    ))
+    magSource_histogram = go.Figure(
+        data=go.Histogram(
+            x=filtered_df_top_magSources['magSource'],
+            marker=dict(color=MARKER_COLOR)
+        )
+    )
     magSource_histogram.update_layout(margin=dict(l=3, r=3, t=3, b=3),
                                     plot_bgcolor=PLOT_BGCOLOR,
                                     paper_bgcolor=PAPER_BGCOLOR,
@@ -188,17 +197,21 @@ def update_data(mag_range, year_range, selectedData):
                                     xaxis=dict(showgrid=False),
                                     yaxis=dict(showgrid=False))
     
-    mag_linechart = go.Figure(data=go.Histogram(
-        x=filtered_df['mag'],
-        nbinsx=30,
-        marker=dict(color=MARKER_COLOR)
-    ))
+    
+    mag_linechart = go.Figure(
+        data=go.Histogram(
+            x=filtered_df['mag'],
+            nbinsx=30,
+            marker=dict(color=MARKER_COLOR)
+        )
+    )
     mag_linechart.update_layout(margin=dict(l=3, r=3, t=3, b=3),
                                 plot_bgcolor=PLOT_BGCOLOR,
                                 paper_bgcolor=PAPER_BGCOLOR,
                                 font_color=FONT_COLOR,
                                 xaxis=dict(showgrid=False),
                                 yaxis=dict(showgrid=False))
+    
     
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"  # Display percentage with two decimal places
 
