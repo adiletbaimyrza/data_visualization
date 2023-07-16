@@ -1,3 +1,9 @@
+:root {
+    --color: white;
+    --background-color: #191a1a;
+    --lighter-bg-color: #373432;
+}
+
 /*---CSS Reset---*/
 
 *,
@@ -8,11 +14,11 @@
 
 html, body {
     height: 100%;
-    color: white;
+    color: var(--color);
     font-family: 'Roboto', sans-serif;
     font-size: 16px;
     font-weight: 300;
-    background: rgb(23, 27, 38);
+    background-color: var(--background-color);
 }
 
 #react-entry-point {
@@ -44,13 +50,11 @@ h1, h5 {
 }
 
 .container {
-    background: rgb(37, 44, 61);
+    background: var(--lighter-bg-color);
 }
 
-/*rgb(46, 116, 173)*/
-
 p {
-    border-bottom: solid rgb(23, 27, 38) 1px;
+    border-bottom: solid var(--background-color) 1.5px;
     padding: 5px 0 0 5px;
 }
 
@@ -89,6 +93,7 @@ p {
     justify-content: center;
     align-items: center;
     padding: 3px;
+    line-height: 1.5;
 
     grid-row-start: 1;
     grid-row-end: 15;
