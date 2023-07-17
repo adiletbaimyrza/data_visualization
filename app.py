@@ -34,6 +34,7 @@ app = Dash(__name__,
             meta_tags=[{"name": "viewport",
                         "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}])
 
+app.title = 'Earthquake Data Visualization Dashboard'
 app.layout = html.Div(id='main', children=[
     html.Link(
         rel='stylesheet',

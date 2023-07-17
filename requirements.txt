@@ -1,5 +1,4 @@
 pandas
-numpy
 dash
 python-dotenv
 dash_mantine_components
