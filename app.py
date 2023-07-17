@@ -67,6 +67,16 @@ app.layout = html.Div(id='main', children=[
                 marks=None
             )
         ]),
+        html.Div(id='map-container', className='container', children=[
+            dcc.Graph(
+                id='map',
+                className='display-item',
+                config={'displayModeBar': 'hover',
+                        'scrollZoom': True,
+                        'displaylogo': False},
+                selectedData={}
+            )
+        ]),
         html.Div(id='shares-container', className='container', children=[
                     html.H5(id='shares-text', children=['Share of all earthquakes']),
                     html.H1(id='percentage', children=[])
@@ -99,16 +109,6 @@ app.layout = html.Div(id='main', children=[
                 config={'displayModeBar': False,
                         'staticPlot': True,
                         'responsive': True}
-            )
-        ]),
-        html.Div(id='map-container', className='container', children=[
-            dcc.Graph(
-                id='map',
-                className='display-item',
-                config={'displayModeBar': 'hover',
-                        'scrollZoom': True,
-                        'displaylogo': False},
-                selectedData={}
             )
         ])
     ])

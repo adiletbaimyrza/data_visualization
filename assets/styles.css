@@ -21,6 +21,13 @@ html, body {
     background-color: var(--background-color);
 }
 
+@media screen and (min-width: 1024px) {
+    html, body {
+        font-size: 20px;
+    }
+}
+
+
 #react-entry-point {
     height: 100%;
 }
@@ -37,16 +44,23 @@ h1, h5 {
 
 #main {
     height: 100%;
-    margin: 5px;
+    margin: 0.3rem;
 }
 
 #grid-container {
     height: 100%;
 
     display: grid;
-    gap: 5px;
+    gap: 0.3rem;
     grid-template-rows: repeat(42, 1fr);
     grid-template-columns: repeat(20, 1fr);
+}
+
+@media screen and (max-width: 500px) {
+    #grid-container {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .container {
@@ -54,8 +68,8 @@ h1, h5 {
 }
 
 p {
-    border-bottom: solid var(--background-color) 1.5px;
-    padding: 5px 0 0 5px;
+    border-bottom: solid var(--background-color) 0.1rem;
+    padding: 0.3rem 0 0 0.3rem;
 }
 
 #shares-text {
@@ -63,7 +77,7 @@ p {
 }
 
 #percentage {
-    font-size: 40px;
+    font-size: 2.5rem;
     font-weight: 400;
 }
 
@@ -92,7 +106,7 @@ p {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 3px;
+    padding: 0.2rem;
     line-height: 1.5;
 
     grid-row-start: 1;
@@ -102,7 +116,7 @@ p {
 }
 
 #mag-RangeSlider-container {
-    padding: 3px;
+    padding: 0.2rem;
 
     grid-row-start: 1;
     grid-row-end: 8;
@@ -116,7 +130,7 @@ p {
 }
 
 #year-RangeSlider-container {
-    padding: 3px;
+    padding: 0.2rem;
     
     grid-row-start: 8;
     grid-row-end: 15;
