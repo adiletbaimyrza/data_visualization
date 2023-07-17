@@ -13,7 +13,7 @@ external_stylesheets = [{
 PLOT_BGCOLOR='#373432'
 PAPER_BGCOLOR='#373432'
 FONT_COLOR='white'
-MARKER_COLOR='#00c9ac'
+MARKER_COLOR='#00cbff'
 
 df = pd.read_csv('usgs-dataset.csv')
 
@@ -144,7 +144,7 @@ def update_data(mag_range, year_range, selectedData):
             lat=filtered_df['latitude'],
             lon=filtered_df['longitude'],
             mode='markers',
-            marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color']),
+            marker=dict(size=filtered_df['bubble_size'], color=filtered_df['color'], opacity=0.7),
             text=filtered_df['mag'],
             customdata=filtered_df[['place', 'year', 'depth']],
             hovertemplate='Magnitude: %{text}<br>Place: %{customdata[0]}<br>Year: %{customdata[1]}<br>Depth: %{customdata[2]}km<extra></extra>',
@@ -153,7 +153,6 @@ def update_data(mag_range, year_range, selectedData):
     map_figure.update_layout(
         mapbox=dict(
             accesstoken=os.getenv('MAPBOX_TOKEN'),
-            center=dict(lat=filtered_df['latitude'].mean(), lon=filtered_df['longitude'].mean()),
             zoom=2,
             uirevision=True,
             style='dark'
