@@ -1,0 +1,25 @@
+
+
+.iconify--feather.iconify {
+    color: var(--button-color);
+}
+
+.mantine-Button-label {
+    color: var(--button-color);
+    font-weight: 300;
+    font-size: 0.8rem;
+}
+
+#info-button:hover {
+    background-color: var(--hover-color);
+    border: none;
+}
+
+#info-button {
+    border-color: var(--lighter-bg-color);
+    background-color: var(--lighter-bg-color);
+}
+
+#info:hover {
+    background-color: var(--hover-color);
+}

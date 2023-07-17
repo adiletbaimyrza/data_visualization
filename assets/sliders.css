@@ -5,3 +5,7 @@
 .rc-slider-track{
     background-color: #c3fcf1;
 }
+
+.rc-slider {
+    padding-top: 1rem;
+}

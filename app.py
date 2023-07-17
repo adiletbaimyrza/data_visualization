@@ -1,19 +1,29 @@
 from dash import Dash, dcc, html, Output, Input
+import dash_mantine_components as dmc
+from dash_iconify import DashIconify
 import pandas as pd
 import plotly.graph_objects as go
 import os
 from dotenv import load_dotenv
 
 
-external_stylesheets = [{
-    'href': '/assets/sliders.css',
-    'rel': 'stylesheet'
-}]
+external_stylesheets = [
+    {'href': '/assets/sliders.css', 'rel': 'stylesheet'},
+    {'href': '/assets/button.css', 'rel': 'stylesheet'},
+    {'href': '/assets/message.css', 'rel': 'stylesheet'},
+]
 
 PLOT_BGCOLOR='#373432'
 PAPER_BGCOLOR='#373432'
 FONT_COLOR='white'
 MARKER_COLOR='#00cbff'
+
+MESSAGE="""Welcome to the earthquake data visualization website!\nThis platform allows
+you to observe and delve into more than 8000+ significant earthquakes
+(with a magnitude of 6 or higher) recorded from January 1st, 1960, until July 16th, 2023.\n.
+Among the notable earthquakes you can find here are 2011 Tohoku Earthquake,
+Japan and the 1960 Great Valvidia Earthquake, Chile.\n\n
+Made by Adilet Baimyrza."""
 
 df = pd.read_csv('usgs-dataset.csv')
 
@@ -42,6 +52,21 @@ app.layout = html.Div(id='main', children=[
         href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap'
     ),
     html.Div(id='grid-container', children=[
+        dmc.NotificationsProvider(
+            position='top-center',
+            containerWidth=800,
+            children=
+            html.Div(id='info', className='container', children=[
+                    html.Div(id="info-container"),
+                    dmc.Button("Details",
+                                rightIcon=DashIconify(icon='octicon:info-16', width=20),
+                                id="info-button",
+                                variant='filled',
+                                fullWidth=True,
+                                radius=0
+                    )
+            ])
+        ),
         html.Div(id='mag-RangeSlider-container', className='container', children=[
             html.P('Magnitude'),
             dcc.RangeSlider(
@@ -113,6 +138,21 @@ app.layout = html.Div(id='main', children=[
         ])
     ])
 ])
+
+
+@app.callback(
+    Output("info-container", "children"),
+    Input("info-button", "n_clicks")
+)
+def show(n_clicks):
+    return dmc.Notification(
+        autoClose=False,
+        title="Earthquake Data Visualization Dashboard",
+        id="info-message",
+        action="show",
+        message=MESSAGE,
+        icon=DashIconify(icon="icon-park-outline:owl")
+)
 
 
 @app.callback(

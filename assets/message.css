@@ -1,0 +1,25 @@
+#info-message {
+    background-color: var(--message-bg-color);
+    border: none;
+    box-shadow: 2px 2px 4px #141414;
+    width: 100%;
+}
+
+.__mantine-ref-icon.mantine-3ylx29.mantine-Notification-icon {
+    background-color: var(--message-bg-color);
+}
+
+.iconify.iconify--icon-park-outline {
+    font-size: 2rem;
+}
+
+.mantine-Text-root.mantine-Notification-title.mantine-17zg7pb {
+    font-size: 1rem;
+    color: var(--color);
+}
+
+.mantine-Text-root.mantine-Notification-description.mantine-7qct1k {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+
