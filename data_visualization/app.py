@@ -34,6 +34,39 @@ app = Dash(__name__,
             meta_tags=[{"name": "viewport",
                         "content": "width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"}])
 
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+            
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-N1NN4V6Y64"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-N1NN4V6Y64');
+        </script>
+
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+    </head>
+    <body>
+        <div>My Custom header</div>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+        <div>My Custom footer</div>
+    </body>
+</html>
+'''
+
 server = app.server
 
 app.title = 'Earthquake Data Visualization Dashboard'
