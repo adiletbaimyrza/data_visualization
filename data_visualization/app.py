@@ -8,9 +8,9 @@ from dash import Dash, dcc, html, Output, Input
 
 
 external_stylesheets = [
-    {'href': '/assets/sliders.css', 'rel': 'stylesheet'},
-    {'href': '/assets/button.css', 'rel': 'stylesheet'},
-    {'href': '/assets/message.css', 'rel': 'stylesheet'},
+    {'href': '/assets/css/sliders.css', 'rel': 'stylesheet'},
+    {'href': '/assets/css/button.css', 'rel': 'stylesheet'},
+    {'href': '/assets/css/message.css', 'rel': 'stylesheet'},
 ]
 
 PLOT_BGCOLOR='#373432'
@@ -25,7 +25,7 @@ MESSAGE="""Welcome to the earthquake data visualization website!This platform al
             Japan and the 1960 Great Valvidia Earthquake, Chile.
             Made by Adilet Baimyrza."""
 
-df = pd.read_csv('usgs-dataset.csv')
+df = pd.read_csv('data_visualization/data/usgs-dataset.csv')
 
 load_dotenv()
 
@@ -38,7 +38,7 @@ app.title = 'Earthquake Data Visualization Dashboard'
 app.layout = html.Div(id='main', children=[
     html.Link(
         rel='stylesheet',
-        href='/assets/styles.css'
+        href='/assets/css/styles.css'
     ),
     html.Link(
         rel='preconnect',
