@@ -1,10 +1,10 @@
-from dash import Dash, dcc, html, Output, Input
-import dash_mantine_components as dmc
-from dash_iconify import DashIconify
-import pandas as pd
-import plotly.graph_objects as go
 import os
+import pandas as pd
 from dotenv import load_dotenv
+import plotly.graph_objects as go
+from dash_iconify import DashIconify
+import dash_mantine_components as dmc
+from dash import Dash, dcc, html, Output, Input
 
 
 external_stylesheets = [
@@ -18,18 +18,16 @@ PAPER_BGCOLOR='#373432'
 FONT_COLOR='white'
 MARKER_COLOR='#00cbff'
 
-MESSAGE="""Welcome to the earthquake data visualization website!\nThis platform allows
-you to observe and delve into more than 8000+ significant earthquakes
-(with a magnitude of 6 or higher) recorded from January 1st, 1960, until July 16th, 2023.\n.
-Among the notable earthquakes you can find here are 2011 Tohoku Earthquake,
-Japan and the 1960 Great Valvidia Earthquake, Chile.\n\n
-Made by Adilet Baimyrza."""
+MESSAGE="""Welcome to the earthquake data visualization website!This platform allows
+            you to observe and delve into more than 8000+ significant earthquakes
+            (with a magnitude of 6 or higher) recorded from January 1st, 1960, until July 16th, 2023.
+            Among the notable earthquakes you can find here are 2011 Tohoku Earthquake,
+            Japan and the 1960 Great Valvidia Earthquake, Chile.
+            Made by Adilet Baimyrza."""
 
 df = pd.read_csv('usgs-dataset.csv')
 
 load_dotenv()
-
-
 
 app = Dash(__name__,
             external_stylesheets=external_stylesheets,
@@ -177,7 +175,6 @@ def update_data(mag_range, year_range, selectedData):
         if selected_points:
             selected_indices = [point.get('pointIndex') for point in selected_points]
             filtered_df = filtered_df.iloc[selected_indices]
-    
     
     filtered_data_percentage = len(filtered_df) / len(df) * 100
     
