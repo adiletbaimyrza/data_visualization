@@ -255,4 +255,4 @@ def update_data(mag_range, year_range, selectedData):
     return map_figure, mag_linechart, magType_histogram, magSource_histogram, f"{filtered_data_percentage:.2f}%"
     
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(host="0.0.0.0", port=8050)
