@@ -1,8 +1,9 @@
 # Earthquake Data Visualization Dashboard
----
 ### Check out the [webapp](https://earthquake-data-visualization-6422c5c4d5d0.herokuapp.com/)!
 
 This webapp allows you to observe and delve into more than 8000+ significant earthquakes (with a magnitude of 6 or higher) recorded from January 1st, 1960, until July 16th, 2023. Among the notable earthquakes you can find here are 2011 Tohoku Earthquake, Japan and the 1960 Great Valvidia Earthquake, Chile. 
+
+![preview webapp gif](preview.gif)
 
 ## Run on your Linux machine
 
