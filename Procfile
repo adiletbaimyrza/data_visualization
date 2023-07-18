@@ -1,1 +1,1 @@
-web: gunicorn data_visualization.app:app
+web: gunicorn "data_visualization.app:app"
