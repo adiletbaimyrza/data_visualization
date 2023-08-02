@@ -48,3 +48,7 @@ python3 app.py
 ```
 Lastly copy the address from the terminal and paste it to your
 favourite browser. Goodluck!
+
+## LICENSE
+---
+[MIT](https://github.com/AdiletBaimyrza/data_visualization/blob/master/LICENSE)
