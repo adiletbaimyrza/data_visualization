@@ -47,4 +47,7 @@ or cd first to app directory data_visualization and then run
 python3 app.py
 ```
 Lastly copy the address from the terminal and paste it to your
-favourtie browser. Goodluck!
+favourite browser. Goodluck!
+
+## LICENSE
+[MIT](https://github.com/AdiletBaimyrza/data_visualization/blob/master/LICENSE)
