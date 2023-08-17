@@ -167,3 +167,7 @@ p {
     grid-column-end: 9;
 }
 
+.loading-parent {
+    height: 100%;
+    width: 100%;
+}

@@ -127,13 +127,19 @@ app.layout = html.Div(id='main', children=[
             )
         ]),
         html.Div(id='map-container', className='container', children=[
-            dcc.Graph(
-                id='map',
-                className='display-item',
-                config={'displayModeBar': 'hover',
-                        'scrollZoom': True,
-                        'displaylogo': False},
-                selectedData={}
+            dcc.Loading(
+                className='loading',
+                parent_className='loading-parent',
+                children=[
+                    dcc.Graph(
+                        id='map',
+                        className='display-item',
+                        config={'displayModeBar': 'hover',
+                                'scrollZoom': True,
+                                'displaylogo': False},
+                        selectedData={}
+                    )
+                ]
             )
         ]),
         html.Div(id='shares-container', className='container', children=[
@@ -142,32 +148,50 @@ app.layout = html.Div(id='main', children=[
         ]),
         html.Div(id='magType-container', className='container', children=[
             html.P('Top magnitude types'),
-            dcc.Graph(
-                id='magType-histogram',
-                className='display-item',
-                config={'displayModeBar': False,
-                        'staticPlot': True,
-                        'responsive': True}
+            dcc.Loading(
+                className='loading',
+                parent_className='loading-parent',
+                children=[
+                    dcc.Graph(
+                        id='magType-histogram',
+                        className='display-item',
+                        config={'displayModeBar': False,
+                                'staticPlot': True,
+                                'responsive': True}
+                    )
+                ]
             )
         ]),
         html.Div(id='magSource-container', className='container', children=[
             html.P('Top contributors'),
-            dcc.Graph(
-                id='magSource-histogram',
-                className='display-item',
-                config={'displayModeBar': False,
-                        'staticPlot': True,
-                        'responsive': True}
+            dcc.Loading(
+                className='loading',
+                parent_className='loading-parent',
+                children=[
+                    dcc.Graph(
+                        id='magSource-histogram',
+                        className='display-item',
+                        config={'displayModeBar': False,
+                                'staticPlot': True,
+                                'responsive': True}
+                    )
+                ]
             )
         ]),
         html.Div(id='mag-linechart-container', className='container', children=[
             html.P('Earthquakes distribution by magnitude'),
-            dcc.Graph(
-                id='mag-linechart',
-                className='display-item',
-                config={'displayModeBar': False,
-                        'staticPlot': True,
-                        'responsive': True}
+            dcc.Loading(
+                className='loading',
+                parent_className='loading-parent',
+                children=[
+                    dcc.Graph(
+                        id='mag-linechart',
+                        className='display-item',
+                        config={'displayModeBar': False,
+                                'staticPlot': True,
+                                'responsive': True}
+                    )
+                ]
             )
         ])
     ])
